@@ -1,8 +1,10 @@
 package cleancode.minesweeper.tobe.io;
 
-import static cleancode.minesweeper.tobe.Minesweeper.SCANNER;
+import java.util.Scanner;
 
 public class ConsoleInputHandler {
+
+    public static final Scanner SCANNER = new Scanner(System.in);
 
     public String getUserInput() {
         return SCANNER.nextLine();

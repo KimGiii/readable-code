@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-public class MinesweeperGame {
+public class Minesweeper {
 
     // 매직 넘버, 매직 스트링 추출
     public static final int BOARD_ROW_SIZE = 8;
@@ -13,10 +13,9 @@ public class MinesweeperGame {
     private static final Cell[][] BOARD = new Cell[BOARD_ROW_SIZE][BOARD_COL_SIZE];
     public static final int LAND_MINE_COUNT = 10;
 
-    private static int gameStatus = 0; // 0: 게임 중, 1: 승리, -1: 패배
+    private int gameStatus = 0; // 0: 게임 중, 1: 승리, -1: 패배
 
-    // 동등한 추상화 레벨로 메서드 추출
-    public static void main(String[] args) {
+    public void run() {
         showGameStartComments();
         initializeGame();
 
@@ -44,7 +43,7 @@ public class MinesweeperGame {
         }
     }
 
-    private static void actOnCell(String cellInput, String userActionInput) {
+    private void actOnCell(String cellInput, String userActionInput) {
         int selectedColIndex = getSelectedColIndex(cellInput);
         int selectedRowIndex = getSelectedRowIndex(cellInput);
 
@@ -68,61 +67,61 @@ public class MinesweeperGame {
         throw new AppException("잘못된 번호를 선택하셨습니다.");
     }
 
-    private static void changeGameStatusLose() {
+    private void changeGameStatusLose() {
         gameStatus = -1;
     }
 
-    private static boolean isLandMineCell(int selectedRowIndex, int selectedColIndex) {
+    private boolean isLandMineCell(int selectedRowIndex, int selectedColIndex) {
         return BOARD[selectedRowIndex][selectedColIndex].isLandMine();
     }
 
-    private static boolean doesUserChooseToOpenCell(String userActionInput) {
+    private boolean doesUserChooseToOpenCell(String userActionInput) {
         return userActionInput.equals("1");
     }
 
-    private static boolean doesUserChooseToPlantFlag(String userActionInput) {
+    private boolean doesUserChooseToPlantFlag(String userActionInput) {
         return userActionInput.equals("2");
     }
 
-    private static int getSelectedRowIndex(String cellInput) {
+    private int getSelectedRowIndex(String cellInput) {
         char cellInputRow = cellInput.charAt(1);
         return convertRowFrom(cellInputRow);
     }
 
-    private static int getSelectedColIndex(String cellInput) {
+    private int getSelectedColIndex(String cellInput) {
         char cellInputCol = cellInput.charAt(0);
         return convertColFrom(cellInputCol);
     }
 
-    private static String getUserActionInputFromUser() {
+    private String getUserActionInputFromUser() {
         System.out.println("선택한 셀에 대한 행위를 선택하세요. (1: 오픈, 2: 깃발 꽂기)");
         return SCANNER.nextLine();
     }
 
-    private static String getCellInputFromUser() {
+    private String getCellInputFromUser() {
         System.out.println("선택할 좌표를 입력하세요. (예: a1)");
         return SCANNER.nextLine();
     }
 
-    private static void lose() {
+    private void lose() {
         System.out.println("지뢰를 밟았습니다. GAME OVER!");
         return;
     }
 
-    private static void win() {
+    private void win() {
         System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
         return;
     }
 
-    private static boolean doesUserLoseGame() {
+    private boolean doesUserLoseGame() {
         return gameStatus == -1;
     }
 
-    private static boolean doesUserWinGame() {
+    private boolean doesUserWinGame() {
         return gameStatus == 1;
     }
 
-    private static void checkIfGameIsOver() {
+    private void checkIfGameIsOver() {
         boolean isAllChecked = isAllCellChecked();
         if (isAllChecked) {
             gameStatus = 1;
@@ -130,14 +129,14 @@ public class MinesweeperGame {
     }
 
     // 리팩토링시 컴파일 에러를 최소화 -> 복제해서 먼저 리팩토링하고 컴파일 에러 안나면 적용
-    private static boolean isAllCellChecked() {
+    private boolean isAllCellChecked() {
         return Arrays.stream(BOARD)
                 .flatMap(Arrays::stream)
                 // equals() 에서 NullPointException 발생 가능 -> 확정적인 값에서 메서드를 호출하도록 수정
                 .allMatch(Cell::isChecked);
     }
 
-    private static int convertRowFrom(char cellInputRow) {
+    private int convertRowFrom(char cellInputRow) {
         int rowIndex = Character.getNumericValue(cellInputRow) - 1;
         if (rowIndex > BOARD_ROW_SIZE) {
             throw new AppException("잘못된 입력입니다.");
@@ -146,7 +145,7 @@ public class MinesweeperGame {
         return rowIndex;
     }
 
-    private static int convertColFrom(char cellInputCol) {
+    private int convertColFrom(char cellInputCol) {
         switch (cellInputCol) {
             case 'a':
                 return 0;
@@ -174,7 +173,7 @@ public class MinesweeperGame {
         }
     }
 
-    private static void showBoard() {
+    private void showBoard() {
         System.out.println("   a b c d e f g h i j");
         for (int row = 0; row < BOARD_ROW_SIZE; row++) {
             System.out.printf("%d  ", row + 1);
@@ -186,7 +185,7 @@ public class MinesweeperGame {
         System.out.println();
     }
 
-    private static void initializeGame() {
+    private void initializeGame() {
         for (int row = 0; row < BOARD_ROW_SIZE; row++) {
             for (int col = 0; col < BOARD_COL_SIZE; col++) {
                 BOARD[row][col] = Cell.create();
@@ -212,7 +211,7 @@ public class MinesweeperGame {
         }
     }
 
-    private static int countNearByLandMines(int row, int col) {
+    private int countNearByLandMines(int row, int col) {
         int count = 0;
         if (row - 1 >= 0 && col - 1 >= 0 && isLandMineCell(row - 1, col - 1)) {
             count++;
@@ -241,13 +240,13 @@ public class MinesweeperGame {
         return count;
     }
 
-    private static void showGameStartComments() {
+    private void showGameStartComments() {
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         System.out.println("지뢰찾기 게임 시작!");
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     }
 
-    private static void open(int row, int col) {
+    private void open(int row, int col) {
         if (row < 0 || row >= BOARD_ROW_SIZE || col < 0 || col >= BOARD_COL_SIZE) {
             return;
         }
@@ -273,5 +272,4 @@ public class MinesweeperGame {
         open(row + 1, col);
         open(row + 1, col + 1);
     }
-
 }

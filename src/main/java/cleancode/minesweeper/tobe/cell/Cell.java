@@ -9,34 +9,23 @@ package cleancode.minesweeper.tobe.cell;
        -> board는 Cell의 상태를 변화시키는 방향으로 가야함!
  */
 
-public abstract class Cell {
+public interface Cell {
 
-    protected static final String FLAG_SIGN = "⚑";
-    protected static final String UNCHECKED_SIGN = "□";
+    String FLAG_SIGN = "⚑";
+    String UNCHECKED_SIGN = "□";
 
-    protected boolean isFlagged;
-    protected boolean isOpened;
+    boolean isLandMine();
 
-    public abstract boolean isLandMine();
+    boolean hasLandMineCount();
 
-    public abstract boolean hasLandMineCount();
-
-    public abstract String getSign();
+    String getSign();
 
 
-    public void flag() {
-        this.isFlagged = true;
-    }
+    void flag();
 
-    public void open() {
-        this.isOpened = true;
-    }
+    void open();
 
-    public boolean isChecked() {
-        return isFlagged || isOpened;
-    }
+    boolean isChecked();
 
-    public boolean isOpened() {
-        return isOpened;
-    }
+    boolean isOpened();
 }

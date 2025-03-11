@@ -1,5 +1,7 @@
 package cleancode.minesweeper.tobe.cell;
 
+import java.util.Objects;
+
 public class CellSnapshot {
 
     private final CellSnapshotStatus status;
@@ -34,12 +36,28 @@ public class CellSnapshot {
         return of(CellSnapshotStatus.UNCHECKED, 0);
     }
 
+    public boolean isSameStatus(CellSnapshotStatus cellSnapshotStatus) {
+        return this.status == cellSnapshotStatus;
+    }
+
     public CellSnapshotStatus getStatus() {
         return status;
     }
 
     public int getNearbyLandMineCount() {
         return nearbyLandMineCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CellSnapshot snapshot = (CellSnapshot) o;
+        return nearbyLandMineCount == snapshot.nearbyLandMineCount && status == snapshot.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(status, nearbyLandMineCount);
     }
 }
 

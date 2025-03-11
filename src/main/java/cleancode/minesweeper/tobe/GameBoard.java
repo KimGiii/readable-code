@@ -3,12 +3,10 @@ package cleancode.minesweeper.tobe;
 import cleancode.minesweeper.tobe.cell.*;
 import cleancode.minesweeper.tobe.gamelevel.GameLevel;
 import cleancode.minesweeper.tobe.position.CellPosition;
+import cleancode.minesweeper.tobe.position.CellPositions;
 import cleancode.minesweeper.tobe.position.RelativePosition;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Stream;
 
 public class GameBoard {
 
@@ -17,7 +15,7 @@ public class GameBoard {
 
     public GameBoard(GameLevel gameLevel) {
         int rowSize = gameLevel.getRowSize();
-        int colSize =  gameLevel.getColSize();
+        int colSize = gameLevel.getColSize();
         board = new Cell[rowSize][colSize];
 
         landMineCount = gameLevel.getLandMineCount();
@@ -60,8 +58,8 @@ public class GameBoard {
     }
 
     private boolean doesCellHaveLandMineCount(CellPosition cellPosition) {
-            Cell cell = findCell(cellPosition);
-            return cell.hasLandMineCount();
+        Cell cell = findCell(cellPosition);
+        return cell.hasLandMineCount();
     }
 
     private boolean isOpenedCell(CellPosition cellPosition) {
@@ -75,10 +73,8 @@ public class GameBoard {
     }
 
     public boolean isAllCellChecked() {
-        return Arrays.stream(board)
-                .flatMap(Arrays::stream)
-                // equals() 에서 NullPointException 발생 가능 -> 확정적인 값에서 메서드를 호출하도록 수정
-                .allMatch(Cell::isChecked);
+        Cells cells = Cells.from(board);
+        return cells.isAllChecked();
     }
 
     public boolean isInvalidCellPosition(CellPosition cellPosition) {
@@ -89,37 +85,45 @@ public class GameBoard {
                 || cellPosition.isColIndexMoreThanOrEqual(colSize);
     }
 
+    // 게임에 숨겨진 버그가 있다
+    // 1. 같은 위치에 여러 개 지뢰가 생길 수 있음
     public void initializeGame() {
-        int rowSize = getRowSize();
-        int colSize = getColSize();
+        CellPositions cellPositions = CellPositions.from(board);
 
-        for (int row = 0; row < rowSize; row++) {
-            for (int col = 0; col < colSize; col++) {
-                board[row][col] = new EmptyCell();
+        initializeEmptyCells(cellPositions);
+
+        List<CellPosition> landMindPositions = cellPositions.extractRandomPositions(landMineCount);
+        initializeLandMineCells(landMindPositions);
+
+        List<CellPosition> numberPositionCandidate = cellPositions.subtract(landMindPositions);
+        initializeNumberCells(numberPositionCandidate);
+
+    }
+
+    private void initializeEmptyCells(CellPositions cellPositions) {
+        List<CellPosition> allPositions = cellPositions.getPositions();
+        for (CellPosition position : allPositions) {
+            updateCellAt(position, new EmptyCell());
+        }
+    }
+
+    private void initializeLandMineCells(List<CellPosition> landMindPositions) {
+        for (CellPosition position : landMindPositions) {
+            updateCellAt(position, new LandMineCell());
+        }
+    }
+
+    private void initializeNumberCells(List<CellPosition> numberPositionCandidates) {
+        for (CellPosition candidatePosition : numberPositionCandidates) {
+            int count = countNearByLandMines(candidatePosition);
+            if (count != 0) {
+                updateCellAt(candidatePosition, new NumberCell(count));
             }
         }
+    }
 
-        for (int i = 0; i < landMineCount; i++) {
-            int landMineCol = new Random().nextInt(colSize);
-            int landMineRow = new Random().nextInt(rowSize);
-            board[landMineRow][landMineCol] = new LandMineCell();
-        }
-
-        for (int row = 0; row < rowSize; row++) {
-            for (int col = 0; col < colSize; col++) {
-                CellPosition cellPosition = CellPosition.of(row, col);
-
-                // 현재 칸 기준으로 상하좌우 대각선방향 총 8개 칸에 지뢰가 몇개 있는지
-                if (isLandMineCellAt(cellPosition)) {
-                    continue;
-                }
-                int count = countNearByLandMines(cellPosition);
-                if (count == 0) {
-                    continue;
-                }
-                board[row][col] = new NumberCell(count);
-            }
-        }
+    private void updateCellAt(CellPosition position, Cell cell) {
+        board[position.getRowIndex()][position.getColIndex()] = cell;
     }
 
     public int getRowSize() {

@@ -1,0 +1,31 @@
+package cleancode.minesweeper.tobe.cell;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class Cells {
+
+    private final List<Cell> cells;
+
+    private Cells(List<Cell> cells) {
+        this.cells = cells;
+    }
+
+    public static Cells of(List<Cell> cells) {
+        return new Cells(cells);
+    }
+
+    public static Cells from(Cell[][] cells) {
+        List<Cell> cellList = Arrays.stream(cells)
+                .flatMap(Arrays::stream)
+                .toList();
+        return of(cellList);
+
+    }
+
+    // 이를 통해 재활용성까지 확보
+    public boolean isAllChecked() {
+        return cells.stream()
+                .allMatch(Cell::isChecked);
+    }
+}

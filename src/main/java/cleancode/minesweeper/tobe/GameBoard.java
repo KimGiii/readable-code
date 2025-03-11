@@ -85,6 +85,11 @@ public class GameBoard {
                 || cellPosition.isColIndexMoreThanOrEqual(colSize);
     }
 
+    public CellSnapshot getSnapshot(CellPosition cellPosition) {
+        Cell cell = findCell(cellPosition);
+        return cell.getSnapshot();
+    }
+
     // 게임에 숨겨진 버그가 있다
     // 1. 같은 위치에 여러 개 지뢰가 생길 수 있음
     public void initializeGame() {
@@ -134,11 +139,6 @@ public class GameBoard {
         return board[0].length;
     }
 
-    public String getSign(CellPosition cellPosition) {
-        Cell cell = findCell(cellPosition);
-        return cell.getSign();
-    }
-
     private Cell findCell(CellPosition cellPosition) {
         return board[cellPosition.getRowIndex()][cellPosition.getColIndex()];
     }
@@ -162,4 +162,5 @@ public class GameBoard {
                 .filter(position -> position.isColIndexLessThan(colSize))
                 .toList();
     }
+
 }

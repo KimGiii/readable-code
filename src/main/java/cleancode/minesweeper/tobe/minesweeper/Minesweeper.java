@@ -1,13 +1,13 @@
 package cleancode.minesweeper.tobe.minesweeper;
 
-import cleancode.minesweeper.tobe.minesweeper.board.GameBoard;
-import cleancode.minesweeper.tobe.minesweeper.config.GameConfig;
-import cleancode.minesweeper.tobe.minesweeper.exception.GameException;
 import cleancode.minesweeper.tobe.game.GameInitializable;
 import cleancode.minesweeper.tobe.game.GameRunnable;
+import cleancode.minesweeper.tobe.minesweeper.board.GameBoard;
+import cleancode.minesweeper.tobe.minesweeper.board.position.CellPosition;
+import cleancode.minesweeper.tobe.minesweeper.config.GameConfig;
+import cleancode.minesweeper.tobe.minesweeper.exception.GameException;
 import cleancode.minesweeper.tobe.minesweeper.io.InputHandler;
 import cleancode.minesweeper.tobe.minesweeper.io.OutputHandler;
-import cleancode.minesweeper.tobe.minesweeper.board.position.CellPosition;
 import cleancode.minesweeper.tobe.minesweeper.user.UserAction;
 
 public class Minesweeper implements GameInitializable, GameRunnable {
@@ -32,15 +32,15 @@ public class Minesweeper implements GameInitializable, GameRunnable {
         outputHandler.showGameStartComments();
 
         while (gameBoard.isInProgress()) {
-            try{
+            try {
                 outputHandler.showBoard(gameBoard);
 
                 CellPosition cellPosition = getCellInputFromUser();
                 UserAction userActionInput = getUserActionInputFromUser();
                 actOnCell(cellPosition, userActionInput);
-            } catch(GameException e){
+            } catch (GameException e) {
                 outputHandler.showExceptionMessage(e);
-            } catch (Exception e){
+            } catch (Exception e) {
                 outputHandler.showSimpleMessage("프로그램에 문제가 생겼습니다.");
             }
         }

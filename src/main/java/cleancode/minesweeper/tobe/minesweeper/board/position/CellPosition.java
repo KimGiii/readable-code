@@ -7,14 +7,6 @@ public class CellPosition {
     private final int rowIndex;
     private final int colIndex;
 
-    public int getRowIndex() {
-        return this.rowIndex;
-    }
-
-    public int getColIndex() {
-        return this.colIndex;
-    }
-
     private CellPosition(int rowIndex, int colIndex) {
         if (rowIndex < 0 || colIndex < 0) {
             throw new IllegalArgumentException("올바르지 않은 좌표입니다.");
@@ -25,6 +17,14 @@ public class CellPosition {
 
     public static CellPosition of(int rowIndex, int colIndex) {
         return new CellPosition(rowIndex, colIndex);
+    }
+
+    public int getRowIndex() {
+        return this.rowIndex;
+    }
+
+    public int getColIndex() {
+        return this.colIndex;
     }
 
     // equals와 hashCode 재정의

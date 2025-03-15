@@ -34,6 +34,7 @@ public class StudyCafePassOrder {
         return this.seatPass;
     }
 
+    // 사물함이 없을 수도 있음 -> Null point error 방지
     public Optional<StudyCafeLockerPass> getLockerPass() {
         return Optional.ofNullable(lockerPass);
     }

@@ -3,6 +3,7 @@ package cleancode.studycafe.tobe.model.pass.locker;
 import cleancode.studycafe.tobe.model.pass.StudyCafePassType;
 import cleancode.studycafe.tobe.model.pass.StudyCafePass;
 
+// 사물함 이용권
 public class StudyCafeLockerPass implements StudyCafePass {
 
     private final StudyCafePassType passType;

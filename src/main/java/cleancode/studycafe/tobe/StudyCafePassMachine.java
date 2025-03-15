@@ -56,6 +56,7 @@ public class StudyCafePassMachine {
             return Optional.empty();
         }
 
+        // Null Point Exception 방지
         Optional<StudyCafeLockerPass> lockerPassCandidate = findLockerPassCandidateBy(selectedPass);
 
         if (lockerPassCandidate.isPresent()) {

@@ -1,32 +1,29 @@
-package cleancode.studycafe.tobe.model;
+package cleancode.studycafe.tobe.model.pass.locker;
 
-import java.util.Set;
+import cleancode.studycafe.tobe.model.pass.StudyCafePassType;
 
-public class StudyCafePass {
+public class StudyCafeLockerPass {
 
     private final StudyCafePassType passType;
     private final int duration;
     private final int price;
-    private final double discountRate;
 
-    private StudyCafePass(StudyCafePassType passType, int duration, int price, double discountRate) {
+    private StudyCafeLockerPass(StudyCafePassType passType, int duration, int price) {
         this.passType = passType;
         this.duration = duration;
         this.price = price;
-        this.discountRate = discountRate;
     }
 
-    public static StudyCafePass of(StudyCafePassType passType, int duration, int price, double discountRate) {
-        return new StudyCafePass(passType, duration, price, discountRate);
+    public static StudyCafeLockerPass of(StudyCafePassType passType, int duration, int price) {
+        return new StudyCafeLockerPass(passType, duration, price);
     }
 
     public boolean isSamePassType(StudyCafePassType passType) {
         return this.passType == passType;
     }
 
-    public boolean isSameDurationType(StudyCafeLockerPass lockerPass) {
-        return lockerPass.isSamePassType(this.passType)
-            && lockerPass.isSameDuration(this.duration);
+    public boolean isSameDuration(int duration) {
+        return this.duration == duration;
     }
 
     public StudyCafePassType getPassType() {
@@ -41,10 +38,6 @@ public class StudyCafePass {
         return price;
     }
 
-    public double getDiscountRate() {
-        return discountRate;
-    }
-
     public String display() {
         if (passType == StudyCafePassType.HOURLY) {
             return String.format("%s시간권 - %d원", duration, price);
@@ -56,9 +49,5 @@ public class StudyCafePass {
             return String.format("%s주권 - %d원", duration, price);
         }
         return "";
-    }
-
-    public boolean cannotUseLocker() {
-        return this.passType.isNotLockerType();
     }
 }

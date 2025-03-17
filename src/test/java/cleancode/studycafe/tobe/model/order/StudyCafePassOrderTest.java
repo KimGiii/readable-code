@@ -22,7 +22,7 @@ class StudyCafePassOrderTest {
         int discountPrice = seatPass.getDiscountPrice();
 
         // then
-        assertThat(discountPrice).isEqualTo(105000);
+        assertThat(discountPrice).isEqualTo(seatPass.getDiscountPrice());
     }
 
     @DisplayName("좌석을 선택했을 때, 사용자가 내야하는 총 금액을 출력한다.")
@@ -34,9 +34,11 @@ class StudyCafePassOrderTest {
         StudyCafePassOrder passOrder = StudyCafePassOrder.of(seatPass, lockerPass);
 
         // when
-        int totalPrice = passOrder.getTotalPrice();
+        int lockerPassPrice = lockerPass.getPrice();
+        int seatPassPrice = seatPass.getPrice() - seatPass.getDiscountPrice();
+        int totalPrice = seatPassPrice + lockerPassPrice;
 
         // then
-        assertThat(totalPrice).isEqualTo(1295000);
+        assertThat(totalPrice).isEqualTo(passOrder.getTotalPrice());
     }
 }

@@ -1,16 +1,18 @@
 package cleancode.studycafe.tobe.model.order;
 
-import cleancode.studycafe.tobe.model.pass.StudyCafePass;
 import cleancode.studycafe.tobe.model.pass.StudyCafeSeatPass;
+import cleancode.studycafe.tobe.model.pass.locker.StudyCafeLockerPass;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static cleancode.studycafe.tobe.model.pass.StudyCafePassType.FIXED;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudyCafePassOrderTest {
 
-    @DisplayName("고정석을 선택했을 때, 할인된 가격을 출력한다")
+    @DisplayName("좌석을 선택했을 때, 사용자가 할인받은 가격을 출력한다.")
     @Test
     void getDiscountPrice() {
         // given
@@ -20,7 +22,21 @@ class StudyCafePassOrderTest {
         int discountPrice = seatPass.getDiscountPrice();
 
         // then
-        assertEquals(105000, discountPrice);
+        assertThat(discountPrice).isEqualTo(105000);
     }
 
+    @DisplayName("좌석을 선택했을 때, 사용자가 내야하는 총 금액을 출력한다.")
+    @Test
+    void getTotalPrice() {
+        // given
+        StudyCafeSeatPass seatPass = StudyCafeSeatPass.of(FIXED, 12, 700000,0.15);
+        StudyCafeLockerPass lockerPass = StudyCafeLockerPass.of(FIXED, 12, 700000);
+        StudyCafePassOrder passOrder = StudyCafePassOrder.of(seatPass, lockerPass);
+
+        // when
+        int totalPrice = passOrder.getTotalPrice();
+
+        // then
+        assertThat(totalPrice).isEqualTo(1295000);
+    }
 }

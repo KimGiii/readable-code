@@ -36,4 +36,19 @@ class StudyCafeSeatPassTest {
         // then
         assertThat(lockerPassType && lockerPassDuration).isTrue();
     }
+
+    @DisplayName("사용자가 고정석이 아닌 다른 좌석 이용권을 선택했을 때, 사물함을 이용할 수 없다.")
+    @Test
+    void cannotUseLockerPass() {
+        // given
+        StudyCafeSeatPass seatPass = StudyCafeSeatPass.of(HOURLY, 2, 4000, 0.0);
+        StudyCafePassType selectedPassType = seatPass.getPassType();
+
+        // when
+        boolean selectedPassLockerType = selectedPassType.isLockerType();
+
+        // then
+        assertThat(selectedPassLockerType).isEqualTo(false);
+
+    }
 }
